@@ -1,0 +1,35 @@
+{
+  "name": "R2D2",
+  "description": "Ring my R2D2 phone.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Luke Karrys",
+    "email": "lukekarrys@gmail.com",
+    "url": "http://lukekarrys.com"
+  },
+  "bin": {
+    "R2D2": "index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/lukekarrys/R2D2/issues"
+  },
+  "dependencies": {
+    "commander": "^2.1.0",
+    "yana": "git+ssh://git@github.com:lukekarrys/ya-node-asterisk"
+  },
+  "homepage": "https://github.com/lukekarrys/R2D2",
+  "keywords": [
+    "R2D2",
+    "asterisk",
+    "ami",
+    "voip"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "preferGlobal": true,
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lukekarrys/R2D2.git"
+  }
+}
