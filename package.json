@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "commander": "^2.1.0",
-    "yana": "git+ssh://git@github.com:lukekarrys/ya-node-asterisk"
+    "yana": "git+ssh://git@github.com:lukekarrys/ya-node-asterisk",
+    "colors": "^0.6.2"
   },
   "homepage": "https://github.com/lukekarrys/R2D2",
   "keywords": [

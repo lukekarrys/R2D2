@@ -3,17 +3,7 @@ R2D2
 
 Ring my R2D2 phone.
 
-```
-   .-""-.
-  /[] _ _\
- _|_o_LII|_
-/ | ==== | \
-|_| ==== |_|w
- ||" ||  ||
- ||LI  o ||
- ||'----'||
-/__|    |__\
-```
+![R2D2](https://i.cloudup.com/H3R1OaYCMx.png)
 
 ### Usage
 ```sh

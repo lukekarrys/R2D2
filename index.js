@@ -1,16 +1,6 @@
 #! /usr/bin/env node
 
-var R2D2 = "\
-   .-\"\"-.  \n\
-  /[] _ _\\  \n\
- _|_o_LII|_  \n\
-/ | ==== | \\\n\
-|_| ==== |_| \n\
- ||\" ||  || \n\
- ||LI  o ||  \n\
- ||'----'||  \n\
-/__|    |__\\";
-
+var R2D2 = require('./lib/ascii');
 var program = require('commander');
 var modulePackage = require('./package');
 
@@ -22,7 +12,13 @@ program
     .option('--port [port]', 'Port', Number, 5038)
     .option('--extension [extension]', 'Extension', String, '1337')
     .option('--context [context]', 'Context', String, 'myphones')
+    .option('--ascii [ascii]', 'ASCII', Boolean, false)
     .parse(process.argv);
+
+if (program.ascii) {
+    console.log(R2D2);
+    return;
+}
 
 var AMI = require('yana');
 var ami = new AMI({
@@ -33,9 +29,7 @@ var ami = new AMI({
 });
 
 ami.on('FullyBooted', function (event) {
-    console.log();
     console.log(R2D2);
-    console.log();
     ami.send({
         Action: 'Originate',
         Channel: 'SIP/' + program.extension,
