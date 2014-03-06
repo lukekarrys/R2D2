@@ -12,6 +12,7 @@ program
     .option('--port [port]', 'Port', Number, 5038)
     .option('--extension [extension]', 'Extension', String, '1337')
     .option('--context [context]', 'Context', String, 'myphones')
+    .option('--timeout [timeout]', 'Timeout', Number, 2000)
     .option('--ascii [ascii]', 'ASCII', Boolean, false)
     .parse(process.argv);
 
@@ -27,8 +28,17 @@ var ami = new AMI({
     'login': program.user,
     'password': program.secret
 });
+var end = function () {
+    ami.disconnect();
+    process.exit(0);
+};
+
+var timeout = setTimeout(function () {
+    end();
+}, program.timeout);
 
 ami.on('FullyBooted', function (event) {
+    clearTimeout(timeout);
     console.log(R2D2);
     ami.send({
         Action: 'Originate',
@@ -37,8 +47,5 @@ ami.on('FullyBooted', function (event) {
         Context: program.context,
         Priority: 1,
         Timeout: 1000
-    }, function (res) {
-        ami.disconnect();
-        process.exit(0);
-    });
+    }, end);
 });
