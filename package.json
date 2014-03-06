@@ -14,9 +14,9 @@
     "url": "https://github.com/lukekarrys/R2D2/issues"
   },
   "dependencies": {
+    "colors": "^0.6.2",
     "commander": "^2.1.0",
-    "yana": "git+ssh://git@github.com:lukekarrys/ya-node-asterisk",
-    "colors": "^0.6.2"
+    "yana": "^0.1.2"
   },
   "homepage": "https://github.com/lukekarrys/R2D2",
   "keywords": [
