@@ -12,7 +12,7 @@ program
     .option('--port [port]', 'Port', Number, 5038)
     .option('--extension [extension]', 'Extension', String, '1337')
     .option('--context [context]', 'Context', String, 'myphones')
-    .option('--timeout [timeout]', 'Timeout', Number, 2000)
+    .option('--timeout [timeout]', 'Timeout', Number, 0)
     .option('--ascii [ascii]', 'ASCII', Boolean, false)
     .parse(process.argv);
 
@@ -33,9 +33,12 @@ var end = function () {
     process.exit(0);
 };
 
-var timeout = setTimeout(function () {
-    end();
-}, program.timeout);
+var timeout;
+if (program.timeout > 0) {
+    timeout = setTimeout(function () {
+        end();
+    }, program.timeout);
+}
 
 ami.on('FullyBooted', function (event) {
     clearTimeout(timeout);
