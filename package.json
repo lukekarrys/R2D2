@@ -16,8 +16,9 @@
   "dependencies": {
     "colors": "^0.6.2",
     "commander": "^2.1.0",
-    "yana": "^0.1.2",
-    "socket.io-client": "^0.9.16"
+    "socket.io-client": "^0.9.16",
+    "underscore": "^1.6.0",
+    "yana": "^0.1.2"
   },
   "homepage": "https://github.com/lukekarrys/R2D2",
   "keywords": [
@@ -35,6 +36,7 @@
     "url": "git://github.com/lukekarrys/R2D2.git"
   },
   "scripts": {
-    "listen": "node connect/socketio.js"
+    "socketio": "node socketio.js",
+    "ring": "node index.js"
   }
 }
