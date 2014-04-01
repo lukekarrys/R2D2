@@ -29,7 +29,7 @@ I can run `npm link` and then run `R2D2` and my [R2D2 telephone](http://www.amaz
 
 #### Whaaaaaaa?!! You weren't kidding! This is a game changer! I want my own!
 
-**I KNOW RIGHT!?** I need to write up a blog post about this. If there is no link here yet, please bug me about it. I'm [@lukekarrys](https://twitter.com/lukekarrys) on Twitter.
+**I KNOW RIGHT!?** I need to write up a blog post about this. If there is no link here yet, please bug me about it. [*Update: [did it.](http://lukecod.es/2014/03/28/beep-boop-ringing-an-r2d2-telephone-with-obihai-asterisk-and-node/)*] I'm [@lukekarrys](https://twitter.com/lukekarrys) on Twitter.
 
 #### I was still being sarcastic. Really, does this have any purpose?
 
