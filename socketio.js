@@ -11,8 +11,8 @@ program
     .version(modulePackage.version)
     .option('--server [server]', 'Server', String, defaults.server)
     .option('--room [room]', 'Room', String, defaults.room)
+    .option('--dry [dry]', 'Dry run', Boolean, false)
     .parse(process.argv);
-
 
 
 var io = require('socket.io-client');
@@ -25,9 +25,13 @@ var R2D2ringer = R2D2({
 var here = [];
 
 function ring(event) {
-    R2D2ringer(function () {
+    if (program.dry) {
         console.log('Ringing due to', event);
-    });
+    } else {
+        R2D2ringer(function () {
+            console.log('Ringing due to', event);
+        });
+    }
 }
 
 function removeFromArray(arr) {
@@ -45,8 +49,10 @@ socket.on('connect', function () {
     console.log('connected as', socket.socket.sessionid);
 
     socket.emit('join', program.room, function (err, roomDesc) {
-        // If there are clients in the room when we join
-        // other than this listener, attempt to ring
+        if (err) {
+            console.error(err);
+            return;
+        }
         here = _.keys(roomDesc.clients);
         console.log('ROOM:', program.room);
         console.log('CONNECTED:', here.join(', '));
