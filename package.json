@@ -38,7 +38,7 @@
   },
   "scripts": {
     "socketio": "node socketio.js",
-    "test-socketio": "node socketio.js --dry true",
+    "test-socketio": "node socketio.js --dry true --verbose true",
     "ring": "node index.js"
   }
 }

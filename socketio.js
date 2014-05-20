@@ -12,6 +12,7 @@ program
     .option('--server [server]', 'Server', String, defaults.server)
     .option('--room [room]', 'Room', String, defaults.room)
     .option('--dry [dry]', 'Dry run', Boolean, false)
+    .option('--verbose [verbose]', 'Verbose', Boolean, false)
     .parse(process.argv);
 
 
@@ -24,12 +25,24 @@ var R2D2ringer = R2D2({
 });
 var here = [];
 
+if (program.verbose) {
+    socket.emit = _.wrap(socket.emit, function (fn, name) {
+        console.log('-->', name, _.toArray(arguments).slice(2));
+        fn.apply(this, _.toArray(arguments).slice(1));
+    });
+
+    socket.$emit = _.wrap(socket.$emit, function (fn) {
+        console.log('<--', arguments[1], _.toArray(arguments).slice(2));
+        return fn.apply(this, _.toArray(arguments).slice(1));
+    });
+}
+
 function ring(event) {
     if (program.dry) {
-        console.log('Ringing due to', event);
+        console.log('RING:', event);
     } else {
         R2D2ringer(function () {
-            console.log('Ringing due to', event);
+            console.log('RING:', event);
         });
     }
 }
@@ -46,7 +59,7 @@ function removeFromArray(arr) {
 }
 
 socket.on('connect', function () {
-    console.log('connected as', socket.socket.sessionid);
+    console.log('CONNECTED:', socket.socket.sessionid);
 
     socket.emit('join', program.room, function (err, roomDesc) {
         if (err) {
@@ -55,11 +68,9 @@ socket.on('connect', function () {
         }
         here = _.keys(roomDesc.clients);
         console.log('ROOM:', program.room);
-        console.log('CONNECTED:', here.join(', '));
+        console.log('HERE:', here.join(', ') || 'empty');
         if (here.length > 0) {
             ring(here.join(', '));
-        } else {
-            console.log('Room is empty');
         }
     });
 
