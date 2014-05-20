@@ -3,7 +3,7 @@
 var program = require('commander');
 var modulePackage = require('./package');
 var defaults = {
-    server: process.env.SERVER || 'http://signaling.simplewebrtc.com:8888',
+    server: process.env.SERVER || 'https://api.talky.io:443' || 'http://signaling.simplewebrtc.com:8888',
     room: process.env.ROOM || 'lukes-magical-r2d2-telephone'
 };
 
