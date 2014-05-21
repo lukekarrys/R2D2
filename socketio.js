@@ -2,10 +2,11 @@
 
 var program = require('commander');
 var modulePackage = require('./package');
+var spawn = require('child_process').spawn;
 var talkyServer = 'https://api.talky.io:443';
 var simpleServer = 'http://signaling.simplewebrtc.com:8888';
 var defaults = {
-    server: process.env.SERVER || simpleServer,
+    server: process.env.SERVER || talkyServer,
     room: process.env.ROOM || 'lukes-magical-r2d2-telephone'
 };
 
@@ -16,6 +17,7 @@ program
     .option('--dry [dry]', 'Dry run', Boolean, false)
     .option('--verbose [verbose]', 'Verbose', Boolean, false)
     .option('--xhr [xhr]', 'xhr', Boolean, false)
+    .option('--ip [ip]', 'IP', String, '')
     .parse(process.argv);
 
 if (program.server === 'talky') {
@@ -47,13 +49,32 @@ if (program.verbose) {
     });
 }
 
-function ring(event) {
-    function log() { console.log('RING:', event); }
-    if (program.dry) {
-        log();
-    } else {
-        R2D2ringer(log);
+function canRing(cb) {
+    if (!program.ip) {
+        return cb(null);
     }
+
+    spawn('ping', [
+        '-c',
+        '1',
+        program.ip
+    ]).on('close', function (code) {
+        cb(code === 0 ? null : new Error('ping for ' + program.ip + ' exited with code ' + code));
+    });
+}
+
+function ring(event) {
+    function log(name, logItem) { console.log(name || 'RING:', logItem || event); }
+
+    canRing(function (err) {
+        if (err) {
+            log('ERROR:', err.message);
+        } else if (program.dry) {
+            log('DRYRING:');
+        } else {
+            R2D2ringer(log);
+        }
+    });
 }
 
 function removeFromArray(arr) {
