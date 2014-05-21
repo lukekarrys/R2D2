@@ -5,7 +5,7 @@ var modulePackage = require('./package');
 var talkyServer = 'https://api.talky.io:443';
 var simpleServer = 'http://signaling.simplewebrtc.com:8888';
 var defaults = {
-    server: process.env.SERVER || '',
+    server: process.env.SERVER || simpleServer,
     room: process.env.ROOM || 'lukes-magical-r2d2-telephone'
 };
 
@@ -45,12 +45,11 @@ if (program.verbose) {
 }
 
 function ring(event) {
+    function log() { console.log('RING:', event); }
     if (program.dry) {
-        console.log('RING:', event);
+        log();
     } else {
-        R2D2ringer(function () {
-            console.log('RING:', event);
-        });
+        R2D2ringer(log);
     }
 }
 
@@ -65,12 +64,14 @@ function removeFromArray(arr) {
     return arr;
 }
 
+console.log('CONNECTING:', program.server);
 socket.on('connect', function () {
     console.log('CONNECTED:', socket.socket.sessionid);
 
+    console.log('JOINING:', program.room);
     socket.emit('join', program.room, function (err, room) {
         if (err) {
-            console.error(err);
+            console.error('ROOM ERROR:', err);
             return;
         }
         here = _.keys(room.clients);
