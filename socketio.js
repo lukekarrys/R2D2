@@ -2,8 +2,10 @@
 
 var program = require('commander');
 var modulePackage = require('./package');
+var talkyServer = 'https://api.talky.io:443';
+var simpleServer = 'http://signaling.simplewebrtc.com:8888';
 var defaults = {
-    server: process.env.SERVER || 'https://api.talky.io:443' || 'http://signaling.simplewebrtc.com:8888',
+    server: process.env.SERVER || '',
     room: process.env.ROOM || 'lukes-magical-r2d2-telephone'
 };
 
@@ -15,6 +17,11 @@ program
     .option('--verbose [verbose]', 'Verbose', Boolean, false)
     .parse(process.argv);
 
+if (program.server === 'talky') {
+    program.server = talkyServer;
+} else if (program.server === 'signalmaster') {
+    program.server = simpleServer;
+}
 
 var io = require('socket.io-client');
 var socket = io.connect(program.server);
@@ -61,12 +68,12 @@ function removeFromArray(arr) {
 socket.on('connect', function () {
     console.log('CONNECTED:', socket.socket.sessionid);
 
-    socket.emit('join', program.room, function (err, roomDesc) {
+    socket.emit('join', program.room, function (err, room) {
         if (err) {
             console.error(err);
             return;
         }
-        here = _.keys(roomDesc.clients);
+        here = _.keys(room.clients);
         console.log('ROOM:', program.room);
         console.log('HERE:', here.join(', ') || 'empty');
         if (here.length > 0) {
