@@ -93,17 +93,12 @@ socket.on('connect', function () {
     console.log('CONNECTED:', socket.socket.sessionid);
 
     console.log('JOINING:', program.room);
-    socket.emit('join', program.room, function (err, room) {
+    socket.emit('join', program.room, function (err) {
         if (err) {
-            console.error('ROOM ERROR:', err);
+            console.error('JOIN ERROR:', err);
             return;
         }
-        here = _.keys(room.clients);
-        console.log('ROOM:', program.room);
-        console.log('HERE:', here.join(', ') || 'empty');
-        if (here.length > 0) {
-            ring(here.join(', '));
-        }
+        console.log('JOINED:', program.room);
     });
 
     socket.on('message', function (message) {
