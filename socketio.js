@@ -15,6 +15,7 @@ program
     .option('--room [room]', 'Room', String, defaults.room)
     .option('--dry [dry]', 'Dry run', Boolean, false)
     .option('--verbose [verbose]', 'Verbose', Boolean, false)
+    .option('--xhr [xhr]', 'xhr', Boolean, false)
     .parse(process.argv);
 
 if (program.server === 'talky') {
@@ -24,6 +25,8 @@ if (program.server === 'talky') {
 }
 
 var io = require('socket.io-client');
+if (program.xhr) io.transports = ['xhr-polling'];
+
 var socket = io.connect(program.server);
 var _ = require('underscore');
 var R2D2 = require('./index');
