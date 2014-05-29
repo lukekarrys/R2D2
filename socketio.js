@@ -21,7 +21,7 @@ var simpleServer = 'http://signaling.simplewebrtc.com:8888';
 
 // Specifiy default cli options
 program = args.default({
-    server: process.env.SERVER || talkyServer,
+    server: talkyServer,
     room: 'lukes-magical-r2d2-telephone',
     dry: false,
     verbose: false,
@@ -29,8 +29,8 @@ program = args.default({
     ip: '',
     ring: true,
     test: false,
-    pushapp: process.env.PUSH_APP || '',
-    pushuser: process.env.PUSH_USER || ''
+    pushapp: '',
+    pushuser: ''
 })
 .boolean(['dry', 'verbose', 'xhr', 'ring', 'test'])
 .argv;
