@@ -3,7 +3,7 @@
 var R2D2 = require('./lib/ascii');
 var program = require('commander');
 var modulePackage = require('./package');
-var _ = require('underscore');
+var _ = require('lodash');
 var AMI = require('yana');
 
 var defaults = {

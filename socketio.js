@@ -4,7 +4,7 @@
 var spawn = require('child_process').spawn;
 var Push = require('pushover-notifications');
 var io = require('socket.io-client');
-var _ = require('underscore');
+var _ = require('lodash');
 var async = require('async');
 var args = require('yargs');
 var R2D2 = require('./index');
@@ -28,12 +28,20 @@ program = args.default({
     xhr: false,
     ip: '',
     ring: true,
+    test: false,
     pushapp: process.env.PUSH_APP || '',
     pushuser: process.env.PUSH_USER || ''
 })
-.boolean(['dry', 'verbose', 'xhr', 'ring'])
+.boolean(['dry', 'verbose', 'xhr', 'ring', 'test'])
 .argv;
 options = JSON.stringify(_.omit(program, '_', '$0'), null, 2);
+
+
+// Just test the options
+if (program.test === true) {
+    console.log(options);
+    process.exit(0);
+}
 
 
 // Set server if we are using a shorthand
@@ -42,6 +50,7 @@ if (program.server === 'talky') {
 } else if (program.server === 'signalmaster') {
     program.server = simpleServer;
 }
+
 
 // Create our pushover notification sender
 if (program.pushapp && program.pushuser) {
@@ -56,6 +65,7 @@ if (program.pushapp && program.pushuser) {
 if (program.xhr) {
     io.transports = ['xhr-polling'];
 }
+
 
 // Create out socket and an array to track ids in the room
 socket = io.connect(program.server);
@@ -131,6 +141,9 @@ function notifyTransports(cb) {
         };
     }
 
+    // Run our notification transport attempts
+    // These should never return an err because then
+    // the other paralle functions wont run
     async.parallel([
         function (cb) {
             pushover(answer('PUSHOVER:', cb));
@@ -141,8 +154,10 @@ function notifyTransports(cb) {
     ], cb);
 }
 
+
+// Notify and log anything that happens when a connection is received
 function notify(id) {
-    var log = console.log.bind(console, id);
+    var log = _.partialRight(console.log, id);
 
     if (program.dry) {
         // This is a dry run so just log the program options
@@ -150,13 +165,9 @@ function notify(id) {
     } else {
         // Attempt to notify on the proper channels
         notifyTransports(function (err, results) {
-            if (err) {
-                log('ERROR:', err);
-            } else {
-                results.forEach(function (result) {
-                    log.apply(log, result);
-                });
-            }
+            results.forEach(function (result) {
+                log.apply(log, result);
+            });
         });
     }
 }
