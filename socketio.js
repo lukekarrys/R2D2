@@ -1,42 +1,68 @@
 #! /usr/bin/env node
 
-var program = require('commander');
-var modulePackage = require('./package');
+
 var spawn = require('child_process').spawn;
+var Push = require('pushover-notifications');
+var io = require('socket.io-client');
+var _ = require('underscore');
+var async = require('async');
+var args = require('yargs');
+var R2D2 = require('./index');
+var R2D2Ring = R2D2({ascii: false});
+var socket, here;
+var program, options;
+var push;
+
+
+// Some servers that we might connect to and allow shorthands for later
 var talkyServer = 'https://api.talky.io:443';
 var simpleServer = 'http://signaling.simplewebrtc.com:8888';
-var defaults = {
+
+
+// Specifiy default cli options
+program = args.default({
     server: process.env.SERVER || talkyServer,
-    room: process.env.ROOM || 'lukes-magical-r2d2-telephone'
-};
+    room: 'lukes-magical-r2d2-telephone',
+    dry: false,
+    verbose: false,
+    xhr: false,
+    ip: '',
+    ring: true,
+    pushapp: process.env.PUSH_APP || '',
+    pushuser: process.env.PUSH_USER || ''
+})
+.boolean(['dry', 'verbose', 'xhr', 'ring'])
+.argv;
+options = JSON.stringify(_.omit(program, '_', '$0'), null, 2);
 
-program
-    .version(modulePackage.version)
-    .option('--server [server]', 'Server', String, defaults.server)
-    .option('--room [room]', 'Room', String, defaults.room)
-    .option('--dry [dry]', 'Dry run', Boolean, false)
-    .option('--verbose [verbose]', 'Verbose', Boolean, false)
-    .option('--xhr [xhr]', 'xhr', Boolean, false)
-    .option('--ip [ip]', 'IP', String, '')
-    .parse(process.argv);
 
+// Set server if we are using a shorthand
 if (program.server === 'talky') {
     program.server = talkyServer;
 } else if (program.server === 'signalmaster') {
     program.server = simpleServer;
 }
 
-var io = require('socket.io-client');
-if (program.xhr) io.transports = ['xhr-polling'];
+// Create our pushover notification sender
+if (program.pushapp && program.pushuser) {
+    push = new Push({
+        user: program.pushuser,
+        token: program.pushapp
+    });
+}
 
-var socket = io.connect(program.server);
-var _ = require('underscore');
-var R2D2 = require('./index');
-var R2D2ringer = R2D2({
-    ascii: false
-});
-var here = [];
 
+// Set socketio transport to force xhr polling per option
+if (program.xhr) {
+    io.transports = ['xhr-polling'];
+}
+
+// Create out socket and an array to track ids in the room
+socket = io.connect(program.server);
+here = [];
+
+
+// Create logs for all socketio emissions if we are in verbose mode
 if (program.verbose) {
     socket.emit = _.wrap(socket.emit, function (fn, name) {
         console.log('-->', name, _.toArray(arguments).slice(2));
@@ -49,32 +75,90 @@ if (program.verbose) {
     });
 }
 
-function canRing(cb) {
-    if (!program.ip) {
-        return cb(null);
-    }
 
-    spawn('ping', [
-        '-c',
-        '1',
-        program.ip
-    ]).on('close', function (code) {
-        cb(code === 0 ? null : new Error('ping for ' + program.ip + ' exited with code ' + code));
-    });
+// The logic for whether to send
+// a push notification or not
+function pushover(cb) {
+    if (push) {
+        push.send({
+            message: 'Someone is contacting you!',
+            url: 'http://talkto.lukekarrys.com',
+            url_title: 'Talk to them!'
+        }, function (err) {
+            cb(null, err ? 'Could not send Pushover message' : 'Pushover message sent successfully');
+        });
+    } else {
+        cb(null, 'No Pushover token or user');
+    }
 }
 
-function ring(event) {
-    function log(name, logItem) { console.log(name || 'RING:', logItem || event); }
 
-    canRing(function (err) {
-        if (err) {
-            log('ERROR:', err.message);
-        } else if (program.dry) {
-            log('DRYRING:');
+// The logic for whether to ring
+// the phone or not
+function ring(cb) {
+    if (!program.ring) {
+        cb(null, 'Ringer turned off');
+    } else {
+        if (program.ip) {
+            // An IP address means that we only ring
+            // if that IP can be succesfully pinged
+            spawn('ping', ['-c', '1', program.ip]).on('close', function (code) {
+                if (code === 0) {
+                    R2D2Ring(function () {
+                        cb(null, program.ip + ' was found and R2D2 rung successfully');
+                    });
+                } else {
+                    cb(null, 'ping for ' + program.ip + ' unsuccessfully exited with code ' + code);
+                }
+            });
         } else {
-            R2D2ringer(log);
+            R2D2Ring(function () {
+                cb(null, 'R2D2 rung successfully');
+            });
         }
-    });
+    }
+}
+
+
+// This will attempt to notify via a push notification
+// and ring the R2D2 phone if those options are set
+function notifyTransports(cb) {
+    // Answer the notification callbacks in a
+    // common format to make logging easier
+    function answer(name, cb) {
+        return function (err, res) {
+            cb(err, [name, res]);
+        };
+    }
+
+    async.parallel([
+        function (cb) {
+            pushover(answer('PUSHOVER:', cb));
+        },
+        function (cb) {
+            ring(answer('RING:', cb));
+        }
+    ], cb);
+}
+
+function notify(id) {
+    var log = console.log.bind(console, id);
+
+    if (program.dry) {
+        // This is a dry run so just log the program options
+        log('DRY:', options);
+    } else {
+        // Attempt to notify on the proper channels
+        notifyTransports(function (err, results) {
+            if (err) {
+                log('ERROR:', err);
+            } else {
+                results.forEach(function (result) {
+                    log.apply(log, result);
+                });
+            }
+        });
+    }
 }
 
 function removeFromArray(arr) {
@@ -105,7 +189,7 @@ socket.on('connect', function () {
         if (message.type === 'offer') {
             console.log('JOINED:', message.from);
             if (here.length === 0) {
-                ring(message.from);
+                notify(message.from);
             }
             here.push(message.from);
         }
