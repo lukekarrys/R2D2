@@ -1,0 +1,10 @@
+# /etc/systemd/system/R2D2.service
+
+[Unit]
+Description=Ring R2D2 telephone
+
+[Service]
+ExecStart=/usr/bin/node /root/R2D2/socketio.js --ring false --xhr true --pushapp PUSHAPP_API_KEY --pushuser PUSHAPP_USER
+
+[Install]
+WantedBy=multi-user.target
