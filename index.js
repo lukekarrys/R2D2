@@ -9,7 +9,7 @@ var AMI = require('yana');
 var defaults = {
     user: 'admin',
     secret: 'admin',
-    hostname: '192.168.1.181',
+    hostname: '192.168.1.180',
     port: 5038,
     extension: '1337',
     context: 'myphones',
