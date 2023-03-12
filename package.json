@@ -1,28 +1,28 @@
 {
-  "name": "R2D2",
+  "name": "@lukekarrys/r2d2",
   "description": "Ring my R2D2 phone.",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "bin": {
+    "r2d2": "lib/cli.mjs"
+  },
   "author": {
     "name": "Luke Karrys",
     "email": "lukekarrys@gmail.com",
     "url": "http://lukekarrys.com"
   },
-  "bin": {
-    "R2D2": "index.js",
-    "R2D2-listen": "socketio.js"
-  },
   "bugs": {
     "url": "https://github.com/lukekarrys/R2D2/issues"
   },
   "dependencies": {
-    "async": "^0.9.0",
-    "colors": "^0.6.2",
-    "commander": "^2.2.0",
-    "lodash": "^2.4.1",
-    "pushover-notifications": "^0.1.9",
-    "socket.io-client": "^0.9.16",
-    "yana": "^0.1.2",
-    "yargs": "^1.2.2"
+    "chalk": "^5.2.0",
+    "yana": "^1.2.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.4"
+  },
+  "scripts": {
+    "sync": "rsync -avh . /Volumes/docker/r2d2 --delete --exclude=\".*\" --exclude=\"node_modules/\""
   },
   "homepage": "https://github.com/lukekarrys/R2D2",
   "keywords": [
@@ -32,15 +32,8 @@
     "voip"
   ],
   "license": "MIT",
-  "main": "index.js",
-  "preferGlobal": true,
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/lukekarrys/R2D2.git"
-  },
-  "scripts": {
-    "listen": "node socketio.js",
-    "ring": "node index.js"
   }
 }
