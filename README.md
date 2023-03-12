@@ -16,7 +16,7 @@ Here's how I have this running currently, future Luke:
 ### CLI
 
 ```sh
-npx @lukekarrys/r2d2 -u USERNAME -p PASSWORD
+npx @lukekarrys/r2d2 -h HOST -u USERNAME -p PASSWORD
 ```
 
 ### FAQ
