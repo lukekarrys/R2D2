@@ -1,6 +1,7 @@
 FROM node:18-alpine3.17
 
 EXPOSE 5060/udp
+EXPOSE 5038/tcp
 EXPOSE 8000/tcp
 
 WORKDIR /var/www/app
