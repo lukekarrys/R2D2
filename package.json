@@ -1,7 +1,7 @@
 {
   "name": "@lukekarrys/r2d2",
   "description": "Ring my R2D2 phone.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": {
     "name": "Luke Karrys",
     "email": "lukekarrys@gmail.com",
