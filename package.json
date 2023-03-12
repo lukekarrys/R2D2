@@ -7,6 +7,9 @@
     "email": "lukekarrys@gmail.com",
     "url": "http://lukekarrys.com"
   },
+  "files": [
+    "lib/"
+  ],
   "bin": {
     "r2d2": "lib/cli.mjs"
   },
