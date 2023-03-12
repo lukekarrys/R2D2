@@ -2,14 +2,13 @@
   "name": "@lukekarrys/r2d2",
   "description": "Ring my R2D2 phone.",
   "version": "1.0.0",
-  "main": "lib/index.js",
-  "bin": {
-    "r2d2": "lib/cli.mjs"
-  },
   "author": {
     "name": "Luke Karrys",
     "email": "lukekarrys@gmail.com",
     "url": "http://lukekarrys.com"
+  },
+  "bin": {
+    "r2d2": "lib/cli.mjs"
   },
   "bugs": {
     "url": "https://github.com/lukekarrys/R2D2/issues"
@@ -21,19 +20,20 @@
   "devDependencies": {
     "prettier": "^2.8.4"
   },
-  "scripts": {
-    "sync": "rsync -avh . /Volumes/docker/r2d2 --delete --exclude=\".*\" --exclude=\"node_modules/\""
-  },
   "homepage": "https://github.com/lukekarrys/R2D2",
   "keywords": [
     "R2D2",
-    "asterisk",
     "ami",
+    "asterisk",
     "voip"
   ],
   "license": "MIT",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/lukekarrys/R2D2.git"
+  },
+  "scripts": {
+    "sync": "rsync -avh . /Volumes/docker/r2d2 --delete --exclude=\".*\" --exclude=\"node_modules/\""
   }
 }
