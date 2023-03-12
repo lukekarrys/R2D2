@@ -11,7 +11,7 @@
     "lib/"
   ],
   "bin": {
-    "r2d2": "lib/cli.mjs"
+    "r2d2": "./lib/cli.mjs"
   },
   "bugs": {
     "url": "https://github.com/lukekarrys/R2D2/issues"
