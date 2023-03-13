@@ -16,10 +16,6 @@
   "bugs": {
     "url": "https://github.com/lukekarrys/R2D2/issues"
   },
-  "dependencies": {
-    "chalk": "^5.2.0",
-    "yana": "^1.2.4"
-  },
   "devDependencies": {
     "prettier": "^2.8.4"
   },

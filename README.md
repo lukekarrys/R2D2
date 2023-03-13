@@ -8,16 +8,28 @@ Ring my R2D2 phone.
 
 Here's how I have this running currently, future Luke:
 
-1. Get files on local Synology: `npm run sync`. Alternatively, download and unpack the tarball for this repo.
-1. `ssh lukekarrys@synology`: ssh into the synology and `cd` to the directory
-1. Build the docker container: `./build.sh`
-1. Run the docker container: `./run.sh` (locally, do `./run.sh interactive` to debug stuff)
+```sh
+# sync files to server
+npm run sync # or download and unpack tarball on server
+ssh server
+cd /path/to/docker/r2d2
+./build.sh
+./run.sh # ./run.sh --interactive locally to debug stuff
+```
 
 ### CLI
 
 ```sh
 npx @lukekarrys/r2d2 -h HOST -u USERNAME -p PASSWORD
 ```
+
+### Obihai Setup
+
+**Server**
+![server instructions](docs/server.png)
+
+**SIP**
+![sip instructions](docs/sip.png)
 
 ### FAQ
 
