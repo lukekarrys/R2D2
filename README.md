@@ -13,6 +13,7 @@ Here's how I have this running currently, future Luke:
 npm run sync # or download and unpack tarball on server
 ssh server
 cd /path/to/docker/r2d2
+echo -e "ADMIN_USER=username\nADMIN_SECRET=adminpassword" > .env
 ./build.sh
 ./run.sh # ./run.sh --interactive locally to debug stuff
 ```

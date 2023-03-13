@@ -1,3 +1,9 @@
 #!/usr/bin/env sh
 
-docker build -t asterisk .
+export $(cat .env | xargs)
+
+docker build \
+  -t asterisk \
+  --build-arg ADMIN_USER=${ADMIN_USER} \
+  --build-arg ADMIN_SECRET=${ADMIN_SECRET} \
+  .

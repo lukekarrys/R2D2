@@ -6,6 +6,8 @@ else
   FLAGS="-d"
 fi
 
+docker rm asterisk --force
+
 docker run $FLAGS \
   -p 5038:5038/tcp \
   -p 5060:5060/udp \
