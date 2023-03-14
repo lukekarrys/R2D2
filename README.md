@@ -43,7 +43,7 @@ echo -e "ADMIN_USER=USERNAME\nADMIN_SECRET=PASSWORD" > .env
 This connects directly to the Asterisk Manager Interface running inside the Docker container:
 
 ```sh
-npx @lukekarrys/r2d2@latest -h HOST -u USERNAME -p PASSWORD
+npx @lukekarrys/r2d2@latest -h $HOST -u USERNAME -p PASSWORD
 ```
 
 ### Web
@@ -51,7 +51,7 @@ npx @lukekarrys/r2d2@latest -h HOST -u USERNAME -p PASSWORD
 Send a `POST` request to port `8000` on the Docker container with a username and password:
 
 ```sh
-curl {HOST}:8000/call -X POST -d "username=USERNAME&password=PASSWORD"
+curl $HOST:8000/call -X POST -d "username=USERNAME&password=PASSWORD"
 ```
 
 If you only want to be able to hit it via this URL, you can not expose port `5038` in the `Dockerfile` and `run.sh` script. The server and AMI are running in the same container.
