@@ -12,10 +12,7 @@ EXPOSE 8000/tcp
 
 WORKDIR /var/www/app
 
-COPY package.json .
-COPY package-lock.json .
 COPY lib lib/
-RUN npm install --omit=dev
 
 COPY asterisk /etc/asterisk/
 RUN sed -i "s/{ADMIN_USER}/${ADMIN_USER}/g" /etc/asterisk/manager.conf
