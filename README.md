@@ -33,7 +33,7 @@ echo -e "ADMIN_USER=username\nADMIN_SECRET=adminpassword" > .env
 This connects directly to the Asterisk Manager Interface running inside the Docker container:
 
 ```sh
-npx @lukekarrys/r2d2 -h HOST -u USERNAME -p PASSWORD
+npx @lukekarrys/r2d2@latest -h HOST -u USERNAME -p PASSWORD
 ```
 
 ### Web
