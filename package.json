@@ -34,8 +34,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/lukekarrys/R2D2.git"
-  },
-  "scripts": {
-    "sync": "rsync -avh . /Volumes/docker/r2d2 --delete --exclude=\".*\" --exclude=\"node_modules/\""
   }
 }
