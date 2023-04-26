@@ -3,7 +3,7 @@
 if [ "$1" == "--interactive" ]; then 
   FLAGS="--rm -it"
 else
-  FLAGS="-d"
+  FLAGS="-d --restart=always"
 fi
 
 docker rm asterisk --force
