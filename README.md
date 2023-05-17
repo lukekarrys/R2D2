@@ -30,10 +30,16 @@ Alternatively run this from this repo on your local machine, to copy everything 
 rsync -avh . /Volumes/docker/r2d2 --delete --exclude="node_modules/"
 ```
 
+**Env Vars**
+
+```sh
+ADMIN_USER=USERNAME
+ADMIN_SECRET=PASSWORD
+```
+
 **Configure and Run Docker Container**
 
 ```sh
-echo -e "ADMIN_USER=USERNAME\nADMIN_SECRET=PASSWORD" > .env
 ./build.sh
 ./run.sh # ./run.sh --interactive locally to debug stuff
 ```
