@@ -18,17 +18,43 @@ Ring my R2D2 phone.
 
 Here's how I have this running currently, future Luke:
 
-**Sync Files to Server**
+**Deploy**
 
-```sh
-ssh server "cd /volume1/docker && rm -rf r2d2/ && mkdir r2d2 && cd r2d2 && curl -L https://github.com/lukekarrys/R2D2/tarball/main | tar xzvf - --strip-components=1"
-```
+On development machine:
 
-Alternatively run this from this repo on your local machine, to copy everything over before pushing:
+1. Login to ghcr.io registry:
 
-```sh
-rsync -avh . /Volumes/docker/r2d2 --delete --exclude="node_modules/"
-```
+   ```
+   gh token | docker login ghcr.io -u lukekarrys --password-stdin
+   ```
+
+1. Build and push new image:
+
+   ```
+   ./build.sh
+   ./push.sh
+   ```
+
+On server:
+
+1. Pull latest image
+
+   ```
+   docker pull ghcr.io/lukekarrys/r2d2
+   ```
+
+1. Stop and remove container
+
+   ```
+   docker stop r2d2
+   docker rm r2d2
+   ```
+
+1. Run container
+
+   ```
+   docker run -d --restart=always -p 5038:5038/tcp -p 5060:5060/udp -p 8000:8000/tcp --name r2d2 -e ADMIN_USER=<USER> -e ADMIN_SECRET=<SECRET> ghcr.io/lukekarrys/r2d2
+   ```
 
 **Env Vars**
 
